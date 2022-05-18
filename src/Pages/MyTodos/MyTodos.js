@@ -1,12 +1,18 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import './MyTodos.css';
+import { toast } from 'react-toastify';
+import AddTodos from '../AddTodos/AddTodos';
+
 const MyTodos = () => {
+  const [strike, setStrike] = useState(false);
   const [todo, setTodo] = useState([]);
+
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`http://localhost:5000/todo`);
+      const { data } = await axios.get(
+        `https://warm-lowlands-70908.herokuapp.com/todo`
+      );
       // console.log(data);
       // all products
       setTodo(data);
@@ -18,7 +24,7 @@ const MyTodos = () => {
     const proceed = window.confirm('Are you sure you want to delete?');
     if (proceed) {
       console.log('Deleting Todo', id);
-      const url = `http://localhost:5000/todo/${id}`;
+      const url = `https://warm-lowlands-70908.herokuapp.com/todo/${id}`;
       fetch(url, {
         method: 'DELETE',
       }).then((res) =>
@@ -34,17 +40,17 @@ const MyTodos = () => {
     }
   };
 
-  const [style, setStyle] = useState({
-    backgroundColor: '',
-  });
-
-  const changeStyle = (id) => {
-    console.log('you just clicked', style);
-
-    setStyle({
-      backgroundColor: 'brown',
-      id,
+  const changeStyle = (index) => {
+    // console.log('Task Complete');
+    const updatedItems = todo.filter((elem) => {
+      if (index == elem._id) {
+        elem.strike = true;
+        toast.success('Task Complete');
+      }
+      return elem;
     });
+
+    setTodo(updatedItems);
   };
 
   return (
@@ -52,13 +58,13 @@ const MyTodos = () => {
       <>
         <div className="">
           <div className="">
+            <AddTodos></AddTodos>
             <h4 className="text-center mt-3 fw-bold">
               Your Todos : ({todo.length})
             </h4>
             <Table striped bordered hover size="sm" className="bordercell">
               <thead className="bordercell">
                 <tr>
-                  <th>ID</th>
                   <th>Todo</th>
                   <th>Description</th>
                   <th>Control</th>
@@ -68,22 +74,23 @@ const MyTodos = () => {
                 <tbody className="bordercell" key={t._id}>
                   <tr>
                     <td
-                      className={
-                        style.id
-                          ? 'style.backgroundColor'
-                          : 'style.backgroundColor'
-                      }
+                      style={{
+                        textDecoration: t.strike ? 'line-through' : 'none',
+                      }}
                     >
-                      {t._id.slice(18, 30)}
+                      {t.name}
                     </td>
-                    <td style={{ backgroundColor: style.bgColor }}>{t.name}</td>
-                    <td style={{ backgroundColor: style.bgColor }}>
-                      {t.description.slice(0, 30)}
+                    <td
+                      style={{
+                        textDecoration: t.strike ? 'line-through' : 'none',
+                      }}
+                    >
+                      {t.description.slice(0, 45)}
                     </td>
                     <td>
                       <Button
                         className="btn btn-info fw-light me-2"
-                        onClick={(e) => changeStyle(t._id)}
+                        onClick={() => changeStyle(t._id)}
                       >
                         Change
                       </Button>

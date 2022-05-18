@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React from 'react';
+import { toast } from 'react-toastify';
 
 const AddTodos = () => {
   const handlePlaceTodo = (event) => {
@@ -9,13 +10,17 @@ const AddTodos = () => {
       description: event.target.description.value,
     };
     console.log(info);
-    axios.post('http://localhost:5000/todo', info).then((response) => {
-      const { data } = response;
-      if (data.insertedId) {
-        //toast();
-        event.target.reset();
-      }
-    });
+    axios
+      .post('https://warm-lowlands-70908.herokuapp.com/todo', info)
+      .then((response) => {
+        const { data } = response;
+        if (data.insertedId) {
+          toast.success('your Todo is update, please reload');
+          event.target.reset();
+          // alert('your product is update');
+          window.location.reload(false);
+        }
+      });
   };
 
   return (

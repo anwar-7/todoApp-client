@@ -1,6 +1,6 @@
 import { signOut } from 'firebase/auth';
 import React from 'react';
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link, NavLink } from 'react-router-dom';
 import auth from '../../../firebase.init';
@@ -33,14 +33,7 @@ const Header = () => {
               >
                 Home
               </NavLink>
-              {/* <NavLink
-                className={({ isActive }) =>
-                  isActive ? 'active-link' : 'link'
-                }
-                to="/addItem"
-              >
-                Add Item
-              </NavLink> */}
+
               <NavLink
                 className={({ isActive }) =>
                   isActive ? 'active-link' : 'link'
